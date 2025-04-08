@@ -47,3 +47,21 @@ cors_proxy.createServer({
 }).listen(port, host, function() {
   console.log('Running CORS Anywhere on ' + host + ':' + port);
 });
+const http = require("http");
+
+const server = http.createServer(cors_proxy.createServer({
+  originBlacklist: originBlacklist,
+  originWhitelist: originWhitelist,
+  requireHeader: ['origin', 'x-requested-with'],
+  removeHeaders: [
+    'cookie', 'cookie2'
+  ],
+  redirectSameOrigin: true,
+  httpProxyOptions: {
+    xfwd: false,
+  }
+}));
+
+server.listen(port, host, () => {
+  console.log(`CORS Anywhere proxy running on http://${host}:${port}`);
+});
